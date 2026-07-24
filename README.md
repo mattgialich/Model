@@ -97,3 +97,4 @@ gait, walk cycle) show the pattern.
 - A socket/IPC bridge so an external intelligence model can drive the
   Controller interface from another process
 # Model
+# Model
