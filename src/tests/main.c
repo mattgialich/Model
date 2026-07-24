@@ -9,6 +9,7 @@ extern int registry_tests(void);
 extern int car_tests(void);
 extern int quadruped_tests(void);
 extern int biped_tests(void);
+extern int biped_balance_tests(void);
 
 int main(int argc, char **argv) {
     (void)argc;
@@ -27,6 +28,7 @@ int main(int argc, char **argv) {
     car_tests();
     quadruped_tests();
     biped_tests();
+    biped_balance_tests();
 
     return run_all_tests();
 }

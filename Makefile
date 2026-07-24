@@ -3,7 +3,8 @@ CFLAGS  = -O2 -std=c11 -Wall -Wextra -Iinclude
 LDLIBS  = -lm
 
 CORE_SRC = src/robot.c src/world.c \
-           robots/registry.c robots/car.c robots/quadruped.c robots/biped.c
+           robots/registry.c robots/car.c robots/quadruped.c robots/biped.c \
+           robots/biped_balance.c
 
 RAYLIB_CFLAGS := $(shell pkg-config --cflags raylib 2>/dev/null)
 RAYLIB_LIBS   := $(shell pkg-config --libs raylib 2>/dev/null)
