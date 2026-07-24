@@ -13,6 +13,7 @@ add-on that watches the sim; the sim never depends on graphics.
 
 ```sh
 make                    # headless simulator -> ./model
+make test               # build + run the unit test suite (src/tests)
 make viewer             # 3D viewer -> ./model_view  (needs: brew install raylib)
 
 ./model car 10          # run the car headless for 10 sim-seconds

@@ -1,0 +1,8 @@
+# build outputs
+model
+model_view
+src/tests/tests
+build/
+
+# macOS
+.DS_Store
