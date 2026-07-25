@@ -147,10 +147,10 @@ static void enhanced_biped_ctrl_step(Controller *c, const Observation *obs,
     base_cmd[2] = 0.0;
 }
 
-/* Get enhanced controller */
-Controller *biped_enhanced_controller(void) {
+/* The biped's demo controller: the balance-aware walk */
+Controller *biped_demo_controller(void) {
     static Controller c = {
-        .name  = "humanoid_enhanced",
+        .name  = "biped_walk",
         .reset = enhanced_biped_ctrl_reset,
         .step  = enhanced_biped_ctrl_step,
     };

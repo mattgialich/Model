@@ -57,7 +57,7 @@ TEST(biped_balance_zmp_computes) {
 TEST(biped_balance_apply_correction) {
     World w;
     world_init(&w, 0.01);
-    world_load_model(&w, robot_model_find("humanoid"));
+    world_load_model(&w, robot_model_find("biped"));
     
     /* Run a few steps to populate state */
     for (int i = 0; i < 10; i++) {

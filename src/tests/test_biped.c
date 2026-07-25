@@ -13,12 +13,12 @@
 #include <stdio.h>
 #include <string.h>
 
-/* Test that the humanoid builds with correct structure */
-TEST(humanoid_build_structure) {
+/* Test that the biped builds with correct structure */
+TEST(biped_build_structure) {
     Robot r;
-    robot_model_find("humanoid")->build(&r);
+    robot_model_find("biped")->build(&r);
 
-    ASSERT_STRING_EQ(r.name, "humanoid");
+    ASSERT_STRING_EQ(r.name, "biped");
     
     /* Expected link count:
        - 1 pelvis + 1 head = 2
@@ -45,9 +45,9 @@ TEST(humanoid_build_structure) {
 }
 
 /* Test that hips have 3 DOF (pitch, roll, yaw) */
-TEST(humanoid_hip_three_dof) {
+TEST(biped_hip_three_dof) {
     Robot r;
-    robot_model_find("humanoid")->build(&r);
+    robot_model_find("biped")->build(&r);
 
     /* Find left hip - it should have roll and yaw children */
     int l_hip = robot_find_link(&r, "l_hip");
@@ -74,9 +74,9 @@ TEST(humanoid_hip_three_dof) {
 }
 
 /* Test cylinder geometry for limbs */
-TEST(humanoid_cylinder_geometry) {
+TEST(biped_cylinder_geometry) {
     Robot r;
-    robot_model_find("humanoid")->build(&r);
+    robot_model_find("biped")->build(&r);
 
     /* Check thigh uses cylinder geometry */
     int l_thigh = robot_find_link(&r, "l_thigh");
@@ -95,9 +95,9 @@ TEST(humanoid_cylinder_geometry) {
 }
 
 /* Test ankle has 2 DOF (pitch and roll) */
-TEST(humanoid_ankle_two_dof) {
+TEST(biped_ankle_two_dof) {
     Robot r;
-    robot_model_find("humanoid")->build(&r);
+    robot_model_find("biped")->build(&r);
 
     int l_ankle_pitch = robot_find_link(&r, "l_ankle");
     ASSERT_TRUE(l_ankle_pitch >= 0);
@@ -116,9 +116,9 @@ TEST(humanoid_ankle_two_dof) {
 }
 
 /* Test arm structure */
-TEST(humanoid_arm_structure) {
+TEST(biped_arm_structure) {
     Robot r;
-    robot_model_find("humanoid")->build(&r);
+    robot_model_find("biped")->build(&r);
 
     /* Check shoulder exists with 3 DOF */
     ASSERT_NE(robot_find_link(&r, "l_shoulder"), -1);
@@ -133,19 +133,19 @@ TEST(humanoid_arm_structure) {
     ASSERT_NE(robot_find_link(&r, "r_wrist"), -1);
 }
 
-/* Test that humanoid controller is available */
-TEST(humanoid_controller_exists) {
-    Controller *c = robot_model_find("humanoid")->demo_controller();
+/* Test that biped controller is available */
+TEST(biped_controller_exists) {
+    Controller *c = robot_model_find("biped")->demo_controller();
     
     ASSERT_TRUE(c != NULL);
-    ASSERT_STRING_EQ(c->name, "humanoid_enhanced");
+    ASSERT_STRING_EQ(c->name, "biped_walk");
 }
 
-/* Test that humanoid can walk (basic simulation) */
-TEST(humanoid_walks_forward) {
+/* Test that biped can walk (basic simulation) */
+TEST(biped_walks_forward) {
     World w;
     world_init(&w, 0.001);
-    world_load_model(&w, robot_model_find("humanoid"));
+    world_load_model(&w, robot_model_find("biped"));
 
     double initial_x = w.robot.base_pos.x;
     
@@ -166,11 +166,11 @@ TEST(humanoid_walks_forward) {
 }
 
 /* Test balance state is tracked */
-TEST(humanoid_balance_state_exists) {
-    /* Reloading the humanoid resets the balance state to zero */
+TEST(biped_balance_state_exists) {
+    /* Reloading the biped resets the balance state to zero */
     World w;
     world_init(&w, 0.001);
-    world_load_model(&w, robot_model_find("humanoid"));
+    world_load_model(&w, robot_model_find("biped"));
 
     ASSERT_FLOAT_EQ(biped_balance_state.last_com_x, 0.0, 1e-12);
     ASSERT_FLOAT_EQ(biped_balance_state.last_com_y, 0.0, 1e-12);
@@ -181,14 +181,14 @@ TEST(humanoid_balance_state_exists) {
 int biped_tests(void) {
     printf("Testing improved robots/biped.c functions\n\n");
 
-    RUN_TEST(humanoid_build_structure);
-    RUN_TEST(humanoid_hip_three_dof);
-    RUN_TEST(humanoid_cylinder_geometry);
-    RUN_TEST(humanoid_ankle_two_dof);
-    RUN_TEST(humanoid_arm_structure);
-    RUN_TEST(humanoid_controller_exists);
-    RUN_TEST(humanoid_walks_forward);
-    RUN_TEST(humanoid_balance_state_exists);
+    RUN_TEST(biped_build_structure);
+    RUN_TEST(biped_hip_three_dof);
+    RUN_TEST(biped_cylinder_geometry);
+    RUN_TEST(biped_ankle_two_dof);
+    RUN_TEST(biped_arm_structure);
+    RUN_TEST(biped_controller_exists);
+    RUN_TEST(biped_walks_forward);
+    RUN_TEST(biped_balance_state_exists);
 
     return 0;
 }

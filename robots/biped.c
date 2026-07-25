@@ -111,7 +111,7 @@ static Link link_make_sphere(const char *name, int parent, double diameter) {
 
 void biped_build(Robot *r) {
     robot_init(r);
-    strncpy(r->name, "humanoid", ROBOT_NAME_LEN - 1);
+    strncpy(r->name, "biped", ROBOT_NAME_LEN - 1);
 
     /* --- PELVIS (root) --- */
     Link pelvis = link_make("pelvis", -1);
@@ -351,82 +351,6 @@ void biped_build(Robot *r) {
     r->base_update = robot_base_update_twist;
 }
 
-/* --- demo controller: improved human-like walk cycle ------------------- */
-static void biped_ctrl_reset(Controller *c, const Robot *r) {
-    (void)c; (void)r;
-}
-
-static void biped_ctrl_step(Controller *c, const Observation *obs,
-                            double *cmd, int n_cmd, double base_cmd[3]) {
-    (void)c; (void)n_cmd;
-
-    /* Simple walking controller with arm swing */
-    double freq = 1.2;        /* step frequency (Hz) */
-    double speed = 0.4;       /* forward speed (m/s) */
-    double phase_offset = M_PI;  /* leg swing phase offset */
-
-    double phi = 2 * M_PI * freq * obs->time;
-
-    /* For each leg, compute target positions */
-    for (int i = 0; i < 2; i++) {
-        double leg_phase = phi + (i == 0 ? 0.0 : phase_offset);
-        double swing = fmax(0.0, sin(leg_phase));  /* 0 during stance, >0 during swing */
-
-        /* Hip: pitch (forward/back) with slight hip offset */
-        double hip_pitch = 0.15 + 0.40 * sin(leg_phase);
-
-        /* Hip roll: slight side-to-side for balance */
-        double hip_roll = 0.05 * sin(leg_phase + M_PI/2);
-
-        /* Knee: swing up during leg lift */
-        double knee = 0.15 + 0.80 * swing;
-
-        /* Ankle: pitch for foot clearance and stability */
-        double ankle = -(hip_pitch - knee) * 0.6;
-
-        int lb = BIP_LEG_BASE(i);
-        cmd[lb + BIP_HIP_PITCH]   = clampd(hip_pitch, -1.8, 1.8);
-        cmd[lb + BIP_HIP_ROLL]    = clampd(hip_roll, -0.8, 0.8);
-        cmd[lb + BIP_HIP_YAW]     = 0.0;
-        cmd[lb + BIP_KNEE]        = clampd(knee, -0.3, 2.6);
-        cmd[lb + BIP_ANKLE_PITCH] = clampd(ankle, -0.6, 0.8);
-        cmd[lb + BIP_ANKLE_ROLL]  = 0.0;
-    }
-
-    /* Arm swing for balance (opposite to legs) */
-    for (int i = 0; i < 2; i++) {
-        double arm_phase = phi + (i == 0 ? M_PI : 0.0);  /* opposite to legs */
-        double swing = fmax(0.0, sin(arm_phase));
-
-        /* Shoulder pitch */
-        double shoulder = -0.3 + 0.5 * sin(arm_phase);
-
-        /* Elbow flexion */
-        double elbow = 0.2 + 0.6 * swing;
-
-        /* Wrist */
-        double wrist = -(shoulder - elbow) * 0.5;
-
-        int ab = BIP_ARM_BASE(i);
-        cmd[ab + BIP_SH_PITCH]    = clampd(shoulder, -2.0, 1.5);
-        cmd[ab + BIP_SH_ROLL]     = 0.0;
-        cmd[ab + BIP_SH_YAW]      = 0.0;
-        cmd[ab + BIP_ELBOW]       = clampd(elbow, -0.2, 3.0);
-        cmd[ab + BIP_WRIST_PITCH] = clampd(wrist, -0.5, 1.0);
-        cmd[ab + BIP_WRIST_ROLL]  = 0.0;
-    }
-
-    /* Base twist for forward motion */
-    base_cmd[0] = speed;              /* forward velocity */
-    base_cmd[1] = 0.0;                /* lateral velocity */
-    base_cmd[2] = 0.0;                /* no turning for now */
-}
-
-Controller *biped_demo_controller(void) {
-    static Controller c = {
-        .name  = "humanoid_walk",
-        .reset = biped_ctrl_reset,
-        .step  = biped_ctrl_step,
-    };
-    return &c;
-}
+/* The demo controller lives in biped_balance.c: the balance-aware walk
+ * (biped_demo_controller) drives this body.
+ */

@@ -37,12 +37,15 @@ src/
   robot.c     kinematic stepping, forward kinematics, base propagation
   world.c     the observe -> control -> step loop
   main.c      headless entry point
+  biped_demo.c standalone biped walking demo
   viewer.c    optional raylib 3D viewer
 robots/
   registry.c  table of available robots
   car.c       4-wheel car, Ackermann steering, bicycle-model base motion
   quadruped.c 4 legs x (hip, knee), trot gait demo
-  biped.c     2 legs x (hip, knee, ankle), walk cycle demo
+  biped.c     2-legged humanoid: 3-DOF hips/shoulders, knees, 2-DOF
+              ankles/wrists, arms + head (24 actuators)
+  biped_balance.c  CoM/ZMP balance helpers + the biped's walk controller
 ```
 
 ## How a robot is defined

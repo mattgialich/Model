@@ -1,13 +1,13 @@
-/* humanoid_demo.c — Simple demo of the humanoid robot walking */
+/* biped_demo.c — Simple demo of the biped robot walking */
 #include "robots.h"
 #include <stdio.h>
 
 int main(void) {
     World w;
     world_init(&w, 0.001);
-    world_load_model(&w, robot_model_find("humanoid"));
+    world_load_model(&w, robot_model_find("biped"));
 
-    printf("Humanoid Demo - Walking Simulation\n");
+    printf("Biped Demo - Walking Simulation\n");
     printf("=================================\n\n");
 
     /* Print initial state */
